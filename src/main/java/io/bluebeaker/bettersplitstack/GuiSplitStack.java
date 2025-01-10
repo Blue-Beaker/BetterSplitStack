@@ -29,11 +29,12 @@ public class GuiSplitStack extends Gui {
         this.x=x;
         this.y=y;
         this.totalCount =slot.getStack().getCount();
-        this.count=totalCount/2;
+        this.count=(int)Math.ceil((float)totalCount/2);
         this.guiLeft=guiLeft;
         this.guiTop=guiTop;
 
-        this.scale=Math.max((int)Math.ceil(16f/totalCount),2);
+        this.scale=Math.max((int)Math.ceil((float)BetterSplitStackConfig.client.minSize/totalCount),BetterSplitStackConfig.client.scale);
+
         this.left=x-(this.scale*this.totalCount)/2;
     }
     public void updateCount(int mouseX,int mouseY){
@@ -46,7 +47,7 @@ public class GuiSplitStack extends Gui {
         GlStateManager.translate(0,0,100.0F);
         drawRect(left,y-10,left+totalCount*scale,y,0xFF000000);
         drawRect(left,y-10,left+count*scale,y,0xFF00B000);
-        drawCenteredString(fr,this.count+"/"+this.totalCount,x,y-10,0xFFFFFFFF);
+        drawCenteredString(fr,this.count+"/"+this.totalCount,x,y-9,0xFFFFFFFF);
         GlStateManager.enableDepth();
         GlStateManager.popMatrix();
     }

@@ -1,23 +1,15 @@
 package io.bluebeaker.bettersplitstack.network;
 
-import io.bluebeaker.bettersplitstack.BetterSplitStack;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class SplitPacketHandler {
-    public static final SimpleNetworkWrapper INSTANCE = NetworkRegistry.INSTANCE.newSimpleChannel(BetterSplitStack.MODID);
-
-    public static void init(){
-        INSTANCE.registerMessage(SplitStackMessage.SplitStackMessageHandler.class, SplitStackMessage.class, 0, Side.SERVER);
-    }
-
+public class SplitHandler
+{
     @SideOnly(Side.CLIENT)
     public static void handleSplitClient(int windowID,int slotID,int count){
-        INSTANCE.sendToServer(new SplitStackMessage(windowID,slotID,count));
+        BSSNetworkHandler.INSTANCE.sendToServer(new SplitStackMessage(windowID,slotID,count));
     }
 
     public static void handleSplitServer(EntityPlayerMP serverPlayer, SplitStackMessage message){

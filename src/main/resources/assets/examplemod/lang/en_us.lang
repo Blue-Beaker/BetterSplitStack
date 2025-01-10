@@ -1,1 +1,4 @@
-config.bettersplitstack.enabled.name=Enabled
+config.bettersplitstack.client.name=Client
+config.bettersplitstack.client.enabled.name=Enabled
+config.bettersplitstack.client.scale.name=Bar Scale
+config.bettersplitstack.client.minSize.name=Minimum Length

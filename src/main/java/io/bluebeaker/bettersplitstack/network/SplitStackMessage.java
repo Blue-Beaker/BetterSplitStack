@@ -49,7 +49,7 @@ public class SplitStackMessage implements IMessage {
         @Override public IMessage onMessage(SplitStackMessage message, MessageContext ctx) {
             EntityPlayerMP serverPlayer = ctx.getServerHandler().player;
             serverPlayer.getServerWorld().addScheduledTask(() -> {
-                SplitPacketHandler.handleSplitServer(serverPlayer, message);
+                SplitHandler.handleSplitServer(serverPlayer, message);
             });
             // No response packet
             return null;

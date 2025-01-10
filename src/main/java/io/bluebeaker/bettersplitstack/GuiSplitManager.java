@@ -1,7 +1,7 @@
 package io.bluebeaker.bettersplitstack;
 
 import io.bluebeaker.bettersplitstack.mixin.AccessorGuiContainer;
-import io.bluebeaker.bettersplitstack.network.SplitPacketHandler;
+import io.bluebeaker.bettersplitstack.network.SplitHandler;
 import io.bluebeaker.bettersplitstack.utils.ContainerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -18,6 +18,9 @@ import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
 
+/**
+ * Manager class for handling split operations on client.
+ */
 @SideOnly(Side.CLIENT)
 public class GuiSplitManager {
     static Minecraft mc = Minecraft.getMinecraft();
@@ -27,6 +30,7 @@ public class GuiSplitManager {
 
     @SubscribeEvent
     public static void onDrawForeground(GuiContainerEvent.DrawForeground event){
+        if(!AvailabilityChecker.isAvailableAndEnabled()) return;
         mouseX=event.getMouseX();
         mouseY=event.getMouseY();
         if(guiSplitStack!=null){
@@ -35,12 +39,14 @@ public class GuiSplitManager {
     }
     @SubscribeEvent
     public static void cancelTooltip(RenderTooltipEvent.Pre event){
+        if(!AvailabilityChecker.isAvailableAndEnabled()) return;
         if(guiSplitStack!=null){
             event.setCanceled(true);
         }
     }
     @SubscribeEvent
     public static void onMouse(GuiScreenEvent.MouseInputEvent.Pre event){
+        if(!AvailabilityChecker.isAvailableAndEnabled()) return;
         if(guiSplitStack!=null){
             event.setCanceled(true);
         }
@@ -67,7 +73,7 @@ public class GuiSplitManager {
                 newStack.setCount(newCount);
                 guiSplitStack.slot.getStack().setCount(guiSplitStack.totalCount-newCount);
                 mc.player.inventory.setItemStack(newStack);
-                SplitPacketHandler.handleSplitClient(container.inventorySlots.windowId,slotID, newCount);
+                SplitHandler.handleSplitClient(container.inventorySlots.windowId,slotID, newCount);
             }
             guiSplitStack=null;
         }

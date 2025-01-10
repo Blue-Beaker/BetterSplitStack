@@ -1,20 +1,26 @@
 package io.bluebeaker.bettersplitstack;
 
-import io.bluebeaker.bettersplitstack.network.SplitPacketHandler;
+import io.bluebeaker.bettersplitstack.network.BSSNetworkHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config.Type;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent.OnConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Map;
+
 @Mod(modid = Tags.MOD_ID, name = Tags.MOD_NAME, version = Tags.VERSION)
-public class BetterSplitStack
+public class BetterSplitStackMod
 {
     public static final String MODID = Tags.MOD_ID;
     public static final String NAME = Tags.MOD_NAME;
@@ -24,9 +30,12 @@ public class BetterSplitStack
 
     private static Logger logger;
     
-    public BetterSplitStack() {
+    public BetterSplitStackMod() {
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(GuiSplitManager.class);
+        if(FMLCommonHandler.instance().getSide().isClient()){
+            MinecraftForge.EVENT_BUS.register(GuiSplitManager.class);
+            MinecraftForge.EVENT_BUS.register(AvailabilityChecker.class);
+        }
     }
     
     @EventHandler
@@ -34,9 +43,12 @@ public class BetterSplitStack
         logger = event.getModLog();
     }
     @EventHandler
+    public void init(FMLInitializationEvent event){
+        BSSNetworkHandler.init();
+    }
+    @EventHandler
     public void onServerStart(FMLServerStartingEvent event){
         this.server=event.getServer();
-        SplitPacketHandler.init();
     }
 
     @SubscribeEvent
@@ -44,6 +56,15 @@ public class BetterSplitStack
         if (event.getModID().equals(MODID)) {
             ConfigManager.sync(MODID, Type.INSTANCE);
         }
+    }
+
+    @NetworkCheckHandler
+    public boolean checkModLists(Map<String, String> modList, Side side) {
+        if (side == Side.SERVER) {
+            boolean onServer = modList.containsKey(MODID);
+            AvailabilityChecker.onConnected(onServer);
+        }
+        return true;
     }
 
     public static Logger getLogger(){
