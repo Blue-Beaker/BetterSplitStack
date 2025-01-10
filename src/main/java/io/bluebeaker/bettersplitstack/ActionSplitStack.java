@@ -28,7 +28,8 @@ public class ActionSplitStack {
 
         ItemStack newStack = slot.decrStackSize(newCount);
         ItemStack newStack2 = slot.onTake(player, newStack);
-
+        if(newStack2.isEmpty())
+            return false;
         player.inventory.setItemStack(newStack2);
         return true;
     }

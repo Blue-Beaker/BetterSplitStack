@@ -6,6 +6,7 @@ import io.bluebeaker.bettersplitstack.utils.ContainerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiContainerEvent;
@@ -46,17 +47,21 @@ public class GuiSplitManager {
     }
     @SubscribeEvent
     public static void onMouse(GuiScreenEvent.MouseInputEvent.Pre event){
+
         if(!AvailabilityChecker.isAvailableAndEnabled()) return;
         if(guiSplitStack!=null){
             event.setCanceled(true);
         }
+        //Right Click only
         if(Mouse.getEventButton()!=1) return;
+
         GuiScreen gui = event.getGui();
         if(!(gui instanceof GuiContainer)) return;
         GuiContainer container = (GuiContainer) gui;
         AccessorGuiContainer accessor = (AccessorGuiContainer) container;
 
         if(Mouse.getEventButtonState()){
+            //Press
             if(accessor.getDragSplitting() || !ContainerUtils.getHeldStack(container).isEmpty()) return;
             Slot slot = container.getSlotUnderMouse();
             if(slot==null || !slot.canTakeStack(mc.player)) return;
@@ -67,13 +72,17 @@ public class GuiSplitManager {
             event.setCanceled(true);
 
         }else {
+            //Release
             if(guiSplitStack!=null){
-                int newCount = guiSplitStack.getCount();
-                Slot slot = guiSplitStack.slot;
-                int slotID = slot.slotNumber;
-                
-                
-                if(newCount>0){
+
+                if(container instanceof GuiContainerCreative){
+                    workaroundCreativeGui((GuiContainerCreative) container,guiSplitStack);
+                }
+                else{
+                    int newCount = guiSplitStack.getCount();
+                    Slot slot = guiSplitStack.slot;
+                    int slotID = slot.slotNumber;
+
                     ActionSplitStack action = new ActionSplitStack(container.inventorySlots, mc.player, slotID,newCount);
                     boolean applied = action.apply();
                     if(applied){
@@ -84,5 +93,14 @@ public class GuiSplitManager {
             guiSplitStack=null;
         }
 
+    }
+
+    private static void workaroundCreativeGui(GuiContainerCreative container,GuiSplitStack guiSplitStack){
+        Slot slot = guiSplitStack.slot;
+        int slotID = slot.getSlotIndex();
+        int newCount = guiSplitStack.getCount();
+
+        ActionSplitStack action = new ActionSplitStack(container.inventorySlots, mc.player, slotID,newCount);
+        boolean applied = action.apply();
     }
 }
