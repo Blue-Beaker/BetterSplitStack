@@ -1,7 +1,7 @@
 package io.bluebeaker.bettersplitstack.network;
 
+import io.bluebeaker.bettersplitstack.ActionSplitStack;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -17,16 +17,29 @@ public class SplitHandler
         int slotID = message.getSlotID();
         int count = message.getCount();
 
+        serverPlayer.markPlayerActive();
+
         if(serverPlayer.openContainer.windowId == windowID){
-            if(slotID>=serverPlayer.openContainer.inventorySlots.size()) return;
 
-            ItemStack stack1 = serverPlayer.openContainer.getSlot(slotID).getStack();
-
-            ItemStack stack2 = stack1.copy();
-            stack2.setCount(count);
-            serverPlayer.inventory.setItemStack(stack2);
-
-            stack1.setCount(stack1.getCount()-count);
+            ActionSplitStack action = new ActionSplitStack(serverPlayer.openContainer, serverPlayer, slotID, count);
+            boolean applied = action.apply();
+            if(!applied){
+                serverPlayer.sendContainerToPlayer(serverPlayer.openContainer);
+            }
+//
+//            if(slotID>=serverPlayer.openContainer.inventorySlots.size()) return;
+//
+//            Slot slot = serverPlayer.openContainer.getSlot(slotID);
+//
+//            if(slot.canTakeStack(serverPlayer)){
+//                ItemStack stack1 = slot.getStack();
+//
+//                ItemStack stack2 = stack1.copy();
+//                stack2.setCount(count);
+//                serverPlayer.inventory.setItemStack(stack2);
+//
+//                stack1.setCount(stack1.getCount()-count);
+//            }
         }
     }
 }

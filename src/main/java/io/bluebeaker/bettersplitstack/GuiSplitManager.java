@@ -59,21 +59,24 @@ public class GuiSplitManager {
         if(Mouse.getEventButtonState()){
             if(accessor.getDragSplitting() || !ContainerUtils.getHeldStack(container).isEmpty()) return;
             Slot slot = container.getSlotUnderMouse();
-            if(slot==null) return;
+            if(slot==null || !slot.canTakeStack(mc.player)) return;
             ItemStack stack = slot.getStack();
             if(stack.getCount()<=1) return;
 
             guiSplitStack=new GuiSplitStack(mouseX-container.getGuiLeft(),slot.yPos,slot,container.getGuiLeft(),container.getGuiTop());
             event.setCanceled(true);
+
         }else {
             if(guiSplitStack!=null){
                 int newCount = guiSplitStack.getCount();
                 int slotID = guiSplitStack.slot.slotNumber;
-                ItemStack newStack = guiSplitStack.slot.getStack().copy();
-                newStack.setCount(newCount);
-                guiSplitStack.slot.getStack().setCount(guiSplitStack.totalCount-newCount);
-                mc.player.inventory.setItemStack(newStack);
-                SplitHandler.handleSplitClient(container.inventorySlots.windowId,slotID, newCount);
+                if(newCount>0){
+                    ActionSplitStack action = new ActionSplitStack(container.inventorySlots, mc.player, slotID,newCount);
+                    boolean applied = action.apply();
+                    if(applied){
+                        SplitHandler.handleSplitClient(container.inventorySlots.windowId,slotID,newCount);
+                    }
+                }
             }
             guiSplitStack=null;
         }
