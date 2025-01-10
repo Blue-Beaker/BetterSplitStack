@@ -26,7 +26,7 @@ public class ActionSplitStack {
         if(!slot.canTakeStack(player))
             return false;
 
-        ItemStack newStack = slot.getStack().splitStack(newCount);
+        ItemStack newStack = slot.decrStackSize(newCount);
         ItemStack newStack2 = slot.onTake(player, newStack);
         
 //        newStack.setCount(newCount);
