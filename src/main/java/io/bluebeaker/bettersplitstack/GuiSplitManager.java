@@ -1,6 +1,7 @@
 package io.bluebeaker.bettersplitstack;
 
 import io.bluebeaker.bettersplitstack.mixin.AccessorGuiContainer;
+import io.bluebeaker.bettersplitstack.network.SplitPacketHandler;
 import io.bluebeaker.bettersplitstack.utils.ContainerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -11,10 +12,13 @@ import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
 
+@SideOnly(Side.CLIENT)
 public class GuiSplitManager {
     static Minecraft mc = Minecraft.getMinecraft();
     public static @Nullable GuiSplitStack guiSplitStack;
@@ -58,10 +62,12 @@ public class GuiSplitManager {
         }else {
             if(guiSplitStack!=null){
                 int newCount = guiSplitStack.getCount();
+                int slotID = guiSplitStack.slot.slotNumber;
                 ItemStack newStack = guiSplitStack.slot.getStack().copy();
                 newStack.setCount(newCount);
                 guiSplitStack.slot.getStack().setCount(guiSplitStack.totalCount-newCount);
                 mc.player.inventory.setItemStack(newStack);
+                SplitPacketHandler.handleSplitClient(container.inventorySlots.windowId,slotID, newCount);
             }
             guiSplitStack=null;
         }

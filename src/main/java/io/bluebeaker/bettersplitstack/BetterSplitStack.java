@@ -1,5 +1,6 @@
 package io.bluebeaker.bettersplitstack;
 
+import io.bluebeaker.bettersplitstack.network.SplitPacketHandler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config.Type;
@@ -35,6 +36,7 @@ public class BetterSplitStack
     @EventHandler
     public void onServerStart(FMLServerStartingEvent event){
         this.server=event.getServer();
+        SplitPacketHandler.init();
     }
 
     @SubscribeEvent
