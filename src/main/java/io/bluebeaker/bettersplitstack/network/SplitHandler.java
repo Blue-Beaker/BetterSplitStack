@@ -26,20 +26,6 @@ public class SplitHandler
             if(!applied){
                 serverPlayer.sendContainerToPlayer(serverPlayer.openContainer);
             }
-//
-//            if(slotID>=serverPlayer.openContainer.inventorySlots.size()) return;
-//
-//            Slot slot = serverPlayer.openContainer.getSlot(slotID);
-//
-//            if(slot.canTakeStack(serverPlayer)){
-//                ItemStack stack1 = slot.getStack();
-//
-//                ItemStack stack2 = stack1.copy();
-//                stack2.setCount(count);
-//                serverPlayer.inventory.setItemStack(stack2);
-//
-//                stack1.setCount(stack1.getCount()-count);
-//            }
         }
     }
 }

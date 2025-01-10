@@ -69,7 +69,10 @@ public class GuiSplitManager {
         }else {
             if(guiSplitStack!=null){
                 int newCount = guiSplitStack.getCount();
-                int slotID = guiSplitStack.slot.slotNumber;
+                Slot slot = guiSplitStack.slot;
+                int slotID = slot.slotNumber;
+                
+                
                 if(newCount>0){
                     ActionSplitStack action = new ActionSplitStack(container.inventorySlots, mc.player, slotID,newCount);
                     boolean applied = action.apply();
