@@ -1,13 +1,13 @@
-package io.bluebeaker.examplemod;
+package io.bluebeaker.bettersplitstack;
 
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.Config.Comment;
 import net.minecraftforge.common.config.Config.LangKey;
 import net.minecraftforge.common.config.Config.Type;
 
-@Config(modid = ExampleMod.MODID,type = Type.INSTANCE,category = "general")
-public class ExampleModConfig {
+@Config(modid = BetterSplitStack.MODID,type = Type.INSTANCE,category = "general")
+public class BetterSplitStackConfig {
     @Comment("Example")
-    @LangKey("config.examplemod.example.name")
+    @LangKey("config.bettersplitstack.example.name")
     public static boolean example = true;
 }

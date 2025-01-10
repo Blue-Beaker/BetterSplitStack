@@ -1,22 +1,21 @@
-package io.bluebeaker.examplemod;
+package io.bluebeaker.bettersplitstack;
 
+import net.minecraftforge.common.ForgeVersion;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+import zone.rong.mixinbooter.IEarlyMixinLoader;
+
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Nullable;
-
-import net.minecraftforge.common.ForgeVersion;
-import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
-import zone.rong.mixinbooter.ILateMixinLoader;
-
-@IFMLLoadingPlugin.Name("examplemod")
+@IFMLLoadingPlugin.Name("bettersplitstack")
 @IFMLLoadingPlugin.MCVersion(ForgeVersion.mcVersion)
-public class ExampleModMixins implements IFMLLoadingPlugin, ILateMixinLoader {
+public class BetterSplitStackMixins implements IFMLLoadingPlugin, IEarlyMixinLoader {
 
     @Override
     public List<String> getMixinConfigs() {
-        return Collections.singletonList("mixins.examplemod.json");
+        return Collections.singletonList("mixins.bettersplitstack.json");
     }
 
     @Override
