@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
+import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.GuiContainerEvent;
@@ -76,18 +77,10 @@ public class GuiSplitManager {
             if(guiSplitStack!=null){
 
                 if(container instanceof GuiContainerCreative){
-                    workaroundCreativeGui((GuiContainerCreative) container,guiSplitStack);
+                    splitCreative((GuiContainerCreative) container,guiSplitStack);
                 }
                 else{
-                    int newCount = guiSplitStack.getCount();
-                    Slot slot = guiSplitStack.slot;
-                    int slotID = slot.slotNumber;
-
-                    ActionSplitStack action = new ActionSplitStack(container.inventorySlots, mc.player, slotID,newCount);
-                    boolean applied = action.apply();
-                    if(applied){
-                        SplitHandler.handleSplitClient(container.inventorySlots.windowId,slotID,newCount);
-                    }
+                    splitCommon(container,guiSplitStack);
                 }
             }
             guiSplitStack=null;
@@ -95,7 +88,30 @@ public class GuiSplitManager {
 
     }
 
-    private static void workaroundCreativeGui(GuiContainerCreative container,GuiSplitStack guiSplitStack){
+    private static void splitCommon(GuiContainer container,GuiSplitStack guiSplitStack){
+        int newCount = guiSplitStack.getCount();
+        int totalCount = guiSplitStack.totalCount;
+        Slot slot = guiSplitStack.slot;
+        int slotID = slot.slotNumber;
+        int windowId = container.inventorySlots.windowId;
+
+        if(newCount == totalCount){
+            mc.playerController.windowClick(windowId, slotID,0,ClickType.PICKUP,mc.player);
+            return;
+        }
+        if(newCount == (int) Math.ceil((float)totalCount/2)){
+            mc.playerController.windowClick(windowId, slotID,1,ClickType.PICKUP,mc.player);
+            return;
+        }
+
+        ActionSplitStack action = new ActionSplitStack(container.inventorySlots, mc.player, slotID,newCount);
+        boolean applied = action.apply();
+        if(applied){
+            SplitHandler.handleSplitClient(windowId,slotID,newCount);
+        }
+    }
+
+    private static void splitCreative(GuiContainerCreative container, GuiSplitStack guiSplitStack){
         Slot slot = guiSplitStack.slot;
         int slotID = slot.getSlotIndex();
         int newCount = guiSplitStack.getCount();
