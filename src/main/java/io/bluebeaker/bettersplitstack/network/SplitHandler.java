@@ -21,10 +21,12 @@ public class SplitHandler
             if(slotID>=serverPlayer.openContainer.inventorySlots.size()) return;
 
             ItemStack stack1 = serverPlayer.openContainer.getSlot(slotID).getStack();
-            stack1.setCount(stack1.getCount()-count);
+
             ItemStack stack2 = stack1.copy();
             stack2.setCount(count);
             serverPlayer.inventory.setItemStack(stack2);
+
+            stack1.setCount(stack1.getCount()-count);
         }
     }
 }
