@@ -25,6 +25,10 @@ public class BetterSplitStackConfig {
         @LangKey("config.bettersplitstack.client.minSize.name")
         @Config.RangeInt(min = 1)
         public int minSize = 24;
+        @Comment("The delay before activating the slider, in milliseconds.")
+        @LangKey("config.bettersplitstack.client.delay.name")
+        @Config.RangeInt(min = 1)
+        public int delay = 100;
 
         public Colors colors = new Colors();
 

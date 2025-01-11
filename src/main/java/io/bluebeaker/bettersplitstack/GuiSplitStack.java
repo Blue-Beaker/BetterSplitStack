@@ -27,6 +27,9 @@ public class GuiSplitStack extends Gui {
     protected final int guiLeft;
     protected final int guiTop;
 
+    private final long startTime;
+    private boolean active = false;
+
     static FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
     public GuiSplitStack(int x, int y,GuiContainer container, Slot slot){
         this.slot = slot;
@@ -43,12 +46,19 @@ public class GuiSplitStack extends Gui {
 
         this.left=x-(this.scale* this.getTotalCount())/2;
         this.width=getTotalCount() *scale;
+
+        this.startTime=System.currentTimeMillis();
     }
     public void updateCount(int mouseX,int mouseY){
         this.count=Math.max(Math.min((int)Math.ceil((float)(mouseX-left)/scale), this.getTotalCount()),0);
     }
     public void draw(int mouseX,int mouseY){
-        this.updateCount(mouseX-this.guiLeft,mouseY-this.guiTop);
+
+        if(this.active || System.currentTimeMillis()-BetterSplitStackConfig.client.delay>this.startTime){
+            this.active=true;
+            this.updateCount(mouseX-this.guiLeft,mouseY-this.guiTop);
+        }
+
         GlStateManager.pushMatrix();
         GlStateManager.disableDepth();
         //Border

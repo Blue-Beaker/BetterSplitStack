@@ -69,7 +69,7 @@ public class SplitManagerClient {
             ItemStack stack = slot.getStack();
             if(stack.getCount()<=1) return;
 
-            guiSplitStack=new GuiSplitStack(mouseX-container.getGuiLeft(),slot.yPos,container,slot);
+            guiSplitStack=new GuiSplitStack(mouseX-container.getGuiLeft(),slot.yPos-1,container,slot);
             event.setCanceled(true);
 
         }else {
