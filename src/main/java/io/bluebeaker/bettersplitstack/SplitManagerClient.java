@@ -10,7 +10,6 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.inventory.ClickType;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.GuiContainerEvent;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -31,7 +30,7 @@ public class SplitManagerClient {
     static int mouseY;
 
     @SubscribeEvent
-    public static void onDrawForeground(GuiContainerEvent.DrawForeground event){
+    public static void drawGUI(GuiScreenEvent.DrawScreenEvent.Post event){
         if(!AvailabilityChecker.isAvailableAndEnabled()) return;
         mouseX=event.getMouseX();
         mouseY=event.getMouseY();
@@ -69,7 +68,7 @@ public class SplitManagerClient {
             ItemStack stack = slot.getStack();
             if(stack.getCount()<=1) return;
 
-            guiSplitStack=new GuiSplitStack(mouseX-container.getGuiLeft(),slot.yPos-1,container,slot);
+            guiSplitStack=new GuiSplitStack(mouseX,mouseY-8,container,slot);
             event.setCanceled(true);
 
         }else {

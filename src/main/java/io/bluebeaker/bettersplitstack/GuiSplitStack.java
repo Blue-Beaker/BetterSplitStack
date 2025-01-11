@@ -24,9 +24,6 @@ public class GuiSplitStack extends Gui {
     protected final int left;
     protected final int width;
 
-    protected final int guiLeft;
-    protected final int guiTop;
-
     private final long startTime;
     private boolean active = false;
 
@@ -39,8 +36,6 @@ public class GuiSplitStack extends Gui {
         this.y=y;
         this.totalCount =slot.getStack().getCount();
         this.count=(int)Math.ceil((float) getTotalCount() /2);
-        this.guiLeft= container.getGuiLeft();
-        this.guiTop= container.getGuiTop();
 
         this.scale=Math.max((int)Math.ceil((float)BetterSplitStackConfig.client.minSize/ getTotalCount()),BetterSplitStackConfig.client.scale);
 
@@ -56,11 +51,12 @@ public class GuiSplitStack extends Gui {
 
         if(this.active || System.currentTimeMillis()-BetterSplitStackConfig.client.delay>this.startTime){
             this.active=true;
-            this.updateCount(mouseX-this.guiLeft,mouseY-this.guiTop);
+            this.updateCount(mouseX,mouseY);
         }
 
         GlStateManager.pushMatrix();
         GlStateManager.disableDepth();
+        GlStateManager.disableLighting();
         //Border
         drawRect(left,y-11,left+width,y+1, ConfigCache.colors.borderColor);
         drawRect(left-1,y-10,left+width+1,y, ConfigCache.colors.borderColor);
@@ -70,6 +66,7 @@ public class GuiSplitStack extends Gui {
 
         drawCenteredString(fr,this.count+"/"+ this.getTotalCount(),x,y-9,0xFFFFFFFF);
         GlStateManager.enableDepth();
+        GlStateManager.enableLighting();
         GlStateManager.popMatrix();
     }
 
