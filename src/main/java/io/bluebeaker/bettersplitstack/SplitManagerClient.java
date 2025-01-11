@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
  * Manager class for handling split operations on client.
  */
 @SideOnly(Side.CLIENT)
-public class GuiSplitManager {
+public class SplitManagerClient {
     static Minecraft mc = Minecraft.getMinecraft();
     public static @Nullable GuiSplitStack guiSplitStack;
     static int mouseX;
@@ -69,13 +69,12 @@ public class GuiSplitManager {
             ItemStack stack = slot.getStack();
             if(stack.getCount()<=1) return;
 
-            guiSplitStack=new GuiSplitStack(mouseX-container.getGuiLeft(),slot.yPos,slot,container.getGuiLeft(),container.getGuiTop());
+            guiSplitStack=new GuiSplitStack(mouseX-container.getGuiLeft(),slot.yPos,container,slot);
             event.setCanceled(true);
 
         }else {
             //Release
             if(guiSplitStack!=null){
-
                 if(container instanceof GuiContainerCreative){
                     splitCreative((GuiContainerCreative) container,guiSplitStack);
                 }
@@ -90,8 +89,8 @@ public class GuiSplitManager {
 
     private static void splitCommon(GuiContainer container,GuiSplitStack guiSplitStack){
         int newCount = guiSplitStack.getCount();
-        int totalCount = guiSplitStack.totalCount;
-        Slot slot = guiSplitStack.slot;
+        int totalCount = guiSplitStack.getTotalCount();
+        Slot slot = guiSplitStack.getSlot();
         int slotID = slot.slotNumber;
         int windowId = container.inventorySlots.windowId;
 
@@ -112,7 +111,7 @@ public class GuiSplitManager {
     }
 
     private static void splitCreative(GuiContainerCreative container, GuiSplitStack guiSplitStack){
-        Slot slot = guiSplitStack.slot;
+        Slot slot = guiSplitStack.getSlot();
         int slotID = slot.getSlotIndex();
         int newCount = guiSplitStack.getCount();
 

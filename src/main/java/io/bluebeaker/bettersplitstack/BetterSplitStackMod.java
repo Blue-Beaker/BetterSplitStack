@@ -1,6 +1,7 @@
 package io.bluebeaker.bettersplitstack;
 
 import io.bluebeaker.bettersplitstack.network.BSSNetworkHandler;
+import io.bluebeaker.bettersplitstack.utils.ConfigCache;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Config.Type;
@@ -33,7 +34,7 @@ public class BetterSplitStackMod
     public BetterSplitStackMod() {
         MinecraftForge.EVENT_BUS.register(this);
         if(FMLCommonHandler.instance().getSide().isClient()){
-            MinecraftForge.EVENT_BUS.register(GuiSplitManager.class);
+            MinecraftForge.EVENT_BUS.register(SplitManagerClient.class);
             MinecraftForge.EVENT_BUS.register(AvailabilityChecker.class);
         }
     }
@@ -45,6 +46,7 @@ public class BetterSplitStackMod
     @EventHandler
     public void init(FMLInitializationEvent event){
         BSSNetworkHandler.init();
+        ConfigCache.colors.update();
     }
     @EventHandler
     public void onServerStart(FMLServerStartingEvent event){
@@ -55,6 +57,7 @@ public class BetterSplitStackMod
     public void onConfigChangedEvent(OnConfigChangedEvent event) {
         if (event.getModID().equals(MODID)) {
             ConfigManager.sync(MODID, Type.INSTANCE);
+            ConfigCache.colors.update();
         }
     }
 
