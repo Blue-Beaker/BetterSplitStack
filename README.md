@@ -1,3 +1,5 @@
 # BetterSplitStack
-A enhancement mod for Minecraft, allowing precise control over splitting a stack of items.  
-Simply drag with right mouse button on a stack to set count, then release to pickup.  
+![icon](icon.png)  
+A utility mod for Minecraft, granting precise control over splitting item stacks.  
+Drag right mouse button on a stack of items to set count. Then release to pickup that count of items.  
+This mod needs to be on both client and server side to work.  
